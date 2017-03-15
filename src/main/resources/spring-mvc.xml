@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+
+    <!-- 配置映射器与适配器 -->  
+    <!-- 相当于注册了DefaultAnnotationHandlerMapping(映射器)和AnnotationMethodHandlerAdapter(适配器)两个bean.即解决了@Controller注解的使用前提配置 -->
+    <mvc:annotation-driven></mvc:annotation-driven> 
+    
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+	<context:component-scan base-package="com.cn.yonglang.controller" />
+    
+    <!-- 定义跳转的文件的前后缀 ，视图模式配置-->  
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="prefix" value="/WEB-INF/" />  
+        <property name="suffix" value=".jsp" />  
+    </bean>  
+
+	<!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->  	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8"></property>
+		<property name="maxInMemorySize" value="10240"></property><!-- 最大内存大小 -->
+		<!-- <property name="uploadTempDir" value="/uploadfile/"></property> --><!--储存路径  -->
+		<property name="maxUploadSize" value="-1"></property><!--最大文件大小  -1无限大  -->
+	</bean>
+		
+	
+</beans>

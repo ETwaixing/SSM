@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+    <!-- 自动扫描 -->  
+    <context:component-scan base-package="com.cn.yonglang" />
+	
+	<!-- 整合mybatis -->
+	<!-- 0.提供数据源 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+		
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${JDBC.DRIVERCLASS}"></property>
+		<property name="url" value="${JDBC.URL}"></property>
+		<property name="username" value="${JDBC.USERNAME}"></property>
+		<property name="password" value="${JDBC.PWD}"></property>
+		<property name="initialSize" value="${JDBC.INITSIZE}"></property>
+		<property name="maxActive" value="${JDBC.MAXSIZE}"></property>
+        <property name="maxIdle" value="${JDBC.MAXIDLE}"></property>  
+        <property name="minIdle" value="${JDBC.MINIDLE}"></property>  
+        <property name="maxWait" value="${JDBC.MAXWAIT}"></property> 		
+	</bean>
+	
+	<!--    1.SqlSessionFactoryBean    -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"></property>
+		<!-- 自动扫描mapping.xml文件 -->  
+        <property name="mapperLocations" value="classpath:com/cn/yonglang/mapping/*.xml"></property>
+	</bean>	
+	
+	<!--    2.dao接口/映射文件     -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.cn.yonglang.dao.imp"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>	
+	
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="ds" />  
+    </bean>	
+	
+</beans>
